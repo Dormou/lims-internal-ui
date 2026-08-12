@@ -6,7 +6,6 @@ import { filterLabels } from '../../hooks/useFilters'
 interface FilterChipsProps {
   filters: Filters
   onRemove: (key: keyof Filters, value: string) => void
-  onClearAll: () => void
 }
 
 export const FilterChips = ({ filters, onRemove }: FilterChipsProps) => {
@@ -25,12 +24,22 @@ export const FilterChips = ({ filters, onRemove }: FilterChipsProps) => {
   if (chips.length === 0) return null
 
   return (
-    <Group gap={8}>
+    <Group gap={8} h={42} align="center">
       {chips.map((chip, idx) => (
         <Badge
           key={idx}
           variant="light"
           color="primaryBlue"
+          h={36}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: 'var(--mantine-radius-sm)',
+            border: '1px solid var(--mantine-color-primaryBlue-6)',
+            backgroundColor: 'var(--mantine-color-complementaryLight-6)',
+            fontWeight: 300,
+            textTransform: 'none',
+          }}
           rightSection={
             <Icon
               icon="mdi:close"

@@ -1,4 +1,5 @@
-import { Box, Stack, Title, Group } from '@mantine/core'
+import { Box, Stack, Title, Group, Button } from '@mantine/core'
+import { Icon } from '@iconify/react'
 import { StatsCards } from '@/features/all-applications/ui/StatsCards/StatsCards'
 import { ApplicationsTable } from '@/features/all-applications/ui/ApplicationsTable/ApplicationsTable'
 import { SearchBar } from '@/features/all-applications/ui/SearchBar/SearchBar'
@@ -17,7 +18,6 @@ export const AllApplicationsPage = () => {
     setOpened,
     filtered,
     removeFilter,
-    clearAllFilters,
   } = useFilters(mockApplications)
 
   return (
@@ -29,24 +29,19 @@ export const AllApplicationsPage = () => {
 
         <StatsCards />
 
-        <Group gap="md" wrap="nowrap">
-          <SearchBar
-            value={search}
-            onChange={setSearch}
-            onFilterClick={() => setOpened(true)}
-          />
-          <FilterChips
-            filters={filters}
-            onRemove={removeFilter}
-            onClearAll={clearAllFilters}
-          />
+        <Group gap="md" wrap="nowrap" align="center">
+          <SearchBar value={search} onChange={setSearch} />
+          <FilterChips filters={filters} onRemove={removeFilter} />
+          <Button
+            variant="outline"
+            leftSection={<Icon icon="line-md:filter" width={20} />}
+            onClick={() => setOpened(true)}
+            ml="auto"
+            style={{ flexShrink: 0 }}
+          >
+            Настроить фильтрацию
+          </Button>
         </Group>
-
-        <FilterChips
-          filters={filters}
-          onRemove={removeFilter}
-          onClearAll={clearAllFilters}
-        />
 
         <ApplicationsTable applications={filtered} />
 
