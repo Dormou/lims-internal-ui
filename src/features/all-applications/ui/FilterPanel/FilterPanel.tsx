@@ -31,7 +31,11 @@ export const FilterPanel = ({
     }))
 
   const allTestTypes = [
-    ...new Set(applications.flatMap((a) => a.tests)),
+    ...new Set(
+      applications.flatMap((a) =>
+        a.tests.map((t) => (typeof t === 'string' ? t : t.name))
+      )
+    ),
   ].map((v) => ({ value: v, label: v }))
 
   return (

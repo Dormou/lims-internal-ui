@@ -1,6 +1,10 @@
 import { rootApi } from '@/shared/api'
 import { APPLICATIONS_ENDPOINTS } from './endpoints'
-import type { GetAllApplicationsResponse, StatsResponseData } from './types'
+import type {
+  ApplicationDraftResponse,
+  GetAllApplicationsResponse,
+  StatsResponseData,
+} from './types'
 
 const applicationsApi = rootApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,11 +14,17 @@ const applicationsApi = rootApi.injectEndpoints({
     getAllApplications: builder.query<GetAllApplicationsResponse, void>({
       query: () => APPLICATIONS_ENDPOINTS.getAll,
     }),
+    getApplicationDraft: builder.query<ApplicationDraftResponse, string>({
+      query: (applicationId) => APPLICATIONS_ENDPOINTS.draft(applicationId),
+    }),
   }),
 })
 
-export const { useGetApplicationsStatsQuery, useGetAllApplicationsQuery } =
-  applicationsApi
+export const {
+  useGetApplicationsStatsQuery,
+  useGetAllApplicationsQuery,
+  useLazyGetApplicationDraftQuery,
+} = applicationsApi
 
 /**
  * Скачивает файл через blob
@@ -22,14 +32,14 @@ export const { useGetApplicationsStatsQuery, useGetAllApplicationsQuery } =
 const downloadByUrl = async (url: string, fileName: string) => {
   const response = await fetch(url, { method: 'GET' })
   const blob = await response.blob()
-  
+
   const downloadUrl = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = downloadUrl
   link.download = fileName
   document.body.appendChild(link)
   link.click()
-  
+
   setTimeout(() => {
     document.body.removeChild(link)
     URL.revokeObjectURL(downloadUrl)
@@ -42,10 +52,10 @@ const downloadByUrl = async (url: string, fileName: string) => {
 const previewByUrl = async (url: string) => {
   const response = await fetch(url, { method: 'GET' })
   const blob = await response.blob()
-  
+
   const previewUrl = URL.createObjectURL(blob)
   window.open(previewUrl, '_blank', 'noopener,noreferrer')
-  
+
   setTimeout(() => URL.revokeObjectURL(previewUrl), 1000)
 }
 

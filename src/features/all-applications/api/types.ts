@@ -20,6 +20,12 @@ export interface ApplicationDocument {
   createdAt: string
 }
 
+export interface TestItem {
+  name: string
+  parameterValues: unknown[]
+  testValues: unknown[]
+}
+
 /** Заявка */
 export interface Application {
   applicationId: string
@@ -29,10 +35,30 @@ export interface Application {
   producer: string | null
   techContact: string | null
   equipmentType: string | null
-  tests: string[]
+  tests: TestItem[]
   status: string
   document: ApplicationDocument | null
 }
 
 /** Ответ - массив на получение данных всех заявок */
 export type GetAllApplicationsResponse = Application[]
+
+/** Черновик заявки */
+export interface ApplicationDraft {
+  branchId: string | null
+  equipmentTypeId: string | null
+  producerName: string | null
+  producerAddress: string | null
+  techDocumentName: string | null
+  samples: Array<string | { name: string; parameterValues: unknown[]; testValues: unknown[] }>
+}
+
+/** Полный черновик заявки */
+export interface ApplicationDraftResponse {
+  id: string
+  status: string
+  updatedAt: string
+  draft: ApplicationDraft | null
+  regulatoryDocument: ApplicationDocument | null
+  additionalDocuments: ApplicationDocument[]
+}

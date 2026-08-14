@@ -42,22 +42,38 @@ export const useFilters = (applications: Application[]) => {
           (app.producer || '').toLowerCase().includes(lower) ||
           (app.techContact || '').toLowerCase().includes(lower) ||
           (app.equipmentType || '').toLowerCase().includes(lower) ||
-          app.tests.some((t) => t.toLowerCase().includes(lower))
+          app.tests.some((t) => {
+            const testName = typeof t === 'string' ? t : t.name
+            return testName.toLowerCase().includes(lower)
+          })
       )
     }
 
     // Фильтры
     if (filters.applicant?.length) {
-      result = result.filter((app) => filters.applicant!.includes(app.applicant))
+      result = result.filter((app) =>
+        filters.applicant!.includes(app.applicant)
+      )
     }
     if (filters.producer?.length) {
-      result = result.filter((app) => app.producer && filters.producer!.includes(app.producer))
+      result = result.filter(
+        (app) => app.producer && filters.producer!.includes(app.producer)
+      )
     }
     if (filters.equipmentType?.length) {
-      result = result.filter((app) => app.equipmentType && filters.equipmentType!.includes(app.equipmentType))
+      result = result.filter(
+        (app) =>
+          app.equipmentType &&
+          filters.equipmentType!.includes(app.equipmentType)
+      )
     }
     if (filters.testTypes?.length) {
-      result = result.filter((app) => app.tests.some((t) => filters.testTypes!.includes(t)))
+      result = result.filter((app) =>
+        app.tests.some((t) => {
+          const testName = typeof t === 'string' ? t : t.name
+          return filters.testTypes!.includes(testName)
+        })
+      )
     }
     if (filters.status?.length) {
       result = result.filter((app) => filters.status!.includes(app.status))
@@ -65,16 +81,24 @@ export const useFilters = (applications: Application[]) => {
 
     // Фильтры по датам
     if (filters.createdAtFrom) {
-      result = result.filter((app) => new Date(app.createdAt) >= new Date(filters.createdAtFrom!))
+      result = result.filter(
+        (app) => new Date(app.createdAt) >= new Date(filters.createdAtFrom!)
+      )
     }
     if (filters.createdAtTo) {
-      result = result.filter((app) => new Date(app.createdAt) <= new Date(filters.createdAtTo!))
+      result = result.filter(
+        (app) => new Date(app.createdAt) <= new Date(filters.createdAtTo!)
+      )
     }
     if (filters.updatedAtFrom) {
-      result = result.filter((app) => new Date(app.updatedAt) >= new Date(filters.updatedAtFrom!))
+      result = result.filter(
+        (app) => new Date(app.updatedAt) >= new Date(filters.updatedAtFrom!)
+      )
     }
     if (filters.updatedAtTo) {
-      result = result.filter((app) => new Date(app.updatedAt) <= new Date(filters.updatedAtTo!))
+      result = result.filter(
+        (app) => new Date(app.updatedAt) <= new Date(filters.updatedAtTo!)
+      )
     }
 
     return result
