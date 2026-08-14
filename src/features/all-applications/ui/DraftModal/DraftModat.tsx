@@ -71,12 +71,6 @@ export const DraftModal = ({ opened, onClose, draft }: DraftModalProps) => {
                 fileSize={Number(draft.regulatoryDocument.fileSize)}
                 fileType={draft.regulatoryDocument.fileExtension}
                 showMeta
-                onPreview={() =>
-                  console.log('Просмотр', draft.regulatoryDocument?.fileName)
-                }
-                onDownload={() =>
-                  console.log('Скачать', draft.regulatoryDocument?.fileName)
-                }
               />
             ) : (
               <Text c="dimmed">Регламентирующий документ отсутствует</Text>
@@ -91,8 +85,6 @@ export const DraftModal = ({ opened, onClose, draft }: DraftModalProps) => {
                   fileSize={Number(doc.fileSize)}
                   fileType={doc.fileExtension}
                   showMeta
-                  onPreview={() => console.log('Просмотр', doc.fileName)}
-                  onDownload={() => console.log('Скачать', doc.fileName)}
                 />
               ))
             ) : (

@@ -8,6 +8,7 @@ import {
   downloadSignedFile,
   downloadDocumentsArchive,
   previewSignedFile,
+  previewRawFile,
   useLazyGetApplicationDraftQuery,
 } from '../../api/AllApplicationsApi'
 import { DraftModal } from '../DraftModal/DraftModat'
@@ -52,111 +53,118 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {applications.map((app) => (
-              <Table.Tr key={app.applicationId}>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {formatDate(app.createdAt)}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {formatDate(app.updatedAt)}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {app.applicant}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {app.producer || '—'}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {app.techContact || '—'}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {app.equipmentType || '—'}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Stack gap={2}>
-                    {app.tests.map((test, idx) => (
-                      <Text key={idx} size="sm" c="black">
-                        {typeof test === 'string' ? test : test.name}
-                      </Text>
-                    ))}
-                  </Stack>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="black">
-                    {app.status}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  {app.status === 'Черновик' ? (
-                    <FileCard
-                      fileName="Черновик заявки"
-                      fileSize={0}
-                      fileType="draft"
-                      showMeta={false}
-                      onPreview={() => handlePreviewDraft(app.applicationId)}
-                    />
-                  ) : app.document ? (
-                    <Stack gap={8}>
+            {applications.map((app) => {
+              const isPdf =
+                app.document?.fileExtension.toLowerCase() === '.pdf'
+
+              return (
+                <Table.Tr key={app.applicationId}>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {formatDate(app.createdAt)}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {formatDate(app.updatedAt)}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {app.applicant}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {app.producer || '—'}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {app.techContact || '—'}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {app.equipmentType || '—'}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    <Stack gap={2}>
+                      {app.tests.map((test, idx) => (
+                        <Text key={idx} size="sm" c="black">
+                          {typeof test === 'string' ? test : test.name}
+                        </Text>
+                      ))}
+                    </Stack>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm" c="black">
+                      {app.status}
+                    </Text>
+                  </Table.Td>
+                  <Table.Td>
+                    {app.status === 'Черновик' ? (
                       <FileCard
-                        key={app.document.documentId}
-                        fileName={app.document.fileName}
-                        fileSize={Number(app.document.fileSize)}
-                        fileType={app.document.fileExtension}
-                        showMeta
-                        onPreview={
-                          app.status === 'Отправлена'
-                            ? () => previewSignedFile(app.applicationId)
-                            : undefined
-                        }
-                        onDownload={
-                          app.status === 'Сформирована'
-                            ? () =>
-                                downloadRawFile(
-                                  app.applicationId,
-                                  app.document!.fileName
-                                )
-                            : app.status === 'Отправлена'
+                        fileName="Черновик заявки"
+                        fileSize={0}
+                        fileType="draft"
+                        showMeta={false}
+                        onPreview={() => handlePreviewDraft(app.applicationId)}
+                      />
+                    ) : app.document ? (
+                      <Stack gap={8}>
+                        <FileCard
+                          key={app.document.documentId}
+                          fileName={app.document.fileName}
+                          fileSize={Number(app.document.fileSize)}
+                          fileType={app.document.fileExtension}
+                          showMeta
+                          onPreview={
+                            isPdf
+                              ? app.status === 'Отправлена'
+                                ? () => previewSignedFile(app.applicationId)
+                                : () => previewRawFile(app.applicationId)
+                              : undefined
+                          }
+                          onDownload={
+                            app.status === 'Сформирована'
                               ? () =>
-                                  downloadSignedFile(
+                                  downloadRawFile(
                                     app.applicationId,
                                     app.document!.fileName
                                   )
-                              : undefined
-                        }
-                      />
-
-                      {app.status === 'Отправлена' && (
-                        <FileCard
-                          fileName="Архив документов"
-                          fileSize={0}
-                          fileType="zip"
-                          showMeta={false}
-                          onDownload={() =>
-                            downloadDocumentsArchive(app.applicationId)
+                              : app.status === 'Отправлена'
+                                ? () =>
+                                    downloadSignedFile(
+                                      app.applicationId,
+                                      app.document!.fileName
+                                    )
+                                : undefined
                           }
                         />
-                      )}
-                    </Stack>
-                  ) : (
-                    <Text size="sm" c="dimmed">
-                      —
-                    </Text>
-                  )}
-                </Table.Td>
-              </Table.Tr>
-            ))}
+
+                        {app.status === 'Отправлена' && (
+                          <FileCard
+                            fileName="Архив документов"
+                            fileSize={0}
+                            fileType="zip"
+                            showMeta={false}
+                            onDownload={() =>
+                              downloadDocumentsArchive(app.applicationId)
+                            }
+                          />
+                        )}
+                      </Stack>
+                    ) : (
+                      <Text size="sm" c="dimmed">
+                        —
+                      </Text>
+                    )}
+                  </Table.Td>
+                </Table.Tr>
+              )
+            })}
           </Table.Tbody>
         </Table>
       </ScrollArea>

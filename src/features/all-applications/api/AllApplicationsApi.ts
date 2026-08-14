@@ -77,3 +77,12 @@ export const downloadDocumentsArchive = (applicationId: string) =>
 /** Открыть подписанный PDF для просмотра */
 export const previewSignedFile = (applicationId: string) =>
   previewByUrl(APPLICATIONS_ENDPOINTS.signedFile(applicationId))
+
+/** Открыть сформированную заявку для просмотра */
+export const previewRawFile = (applicationId: string) => {
+  window.open(
+    APPLICATIONS_ENDPOINTS.rawFile(applicationId),
+    '_blank',
+    'noopener,noreferrer'
+  )
+}
