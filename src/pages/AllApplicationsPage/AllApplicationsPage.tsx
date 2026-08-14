@@ -72,9 +72,9 @@ export const AllApplicationsPage = () => {
             setFilters(newFilters)
             setOpened(false)
           }}
+          applications={applications}
         />
       </Stack>
     </Box>
   )
 }
-

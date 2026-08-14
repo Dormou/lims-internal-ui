@@ -5,13 +5,14 @@ import { Icon } from '@iconify/react'
 
 import '@mantine/dates/styles.css'
 import type { Filters } from '../../hooks/useFilters'
-import { mockApplications } from '../../model/mockData'
+import type { Application } from '../../api/types'
 
 interface FilterPanelProps {
   opened: boolean
   onClose: () => void
   filters: Filters
   onApply: (filters: Filters) => void
+  applications: Application[]
 }
 
 export const FilterPanel = ({
@@ -19,16 +20,18 @@ export const FilterPanel = ({
   onClose,
   filters,
   onApply,
+  applications,
 }: FilterPanelProps) => {
   const [tempFilters, setTempFilters] = useState<Filters>({ ...filters })
 
-  const unique = (key: keyof (typeof mockApplications)[0]) =>
-    [...new Set(mockApplications.map((a) => a[key]))]
-      .filter(Boolean)
-      .map((v) => ({ value: v as string, label: v as string }))
+  const unique = (key: 'applicant' | 'producer' | 'equipmentType') =>
+    [...new Set(applications.map((a) => a[key]).filter(Boolean))].map((v) => ({
+      value: v as string,
+      label: v as string,
+    }))
 
   const allTestTypes = [
-    ...new Set(mockApplications.flatMap((a) => a.testTypes)),
+    ...new Set(applications.flatMap((a) => a.tests)),
   ].map((v) => ({ value: v, label: v }))
 
   return (
@@ -44,6 +47,7 @@ export const FilterPanel = ({
             Настройки фильтрации заявок
           </Text>
         </Group>
+
         <Group grow>
           <DateInput
             label="Дата создания (начало периода)"
@@ -107,19 +111,20 @@ export const FilterPanel = ({
             valueFormat="DD.MM.YYYY"
           />
         </Group>
+
         <MultiSelect
           label="Заказчик"
           labelProps={{ fw: 300 }}
-          data={unique('customer')}
-          value={tempFilters.customer || []}
-          onChange={(v) => setTempFilters({ ...tempFilters, customer: v })}
+          data={unique('applicant')}
+          value={tempFilters.applicant || []}
+          onChange={(v) => setTempFilters({ ...tempFilters, applicant: v })}
         />
         <MultiSelect
           label="Изготовитель"
           labelProps={{ fw: 300 }}
-          data={unique('manufacturer')}
-          value={tempFilters.manufacturer || []}
-          onChange={(v) => setTempFilters({ ...tempFilters, manufacturer: v })}
+          data={unique('producer')}
+          value={tempFilters.producer || []}
+          onChange={(v) => setTempFilters({ ...tempFilters, producer: v })}
         />
         <MultiSelect
           label="Тип оборудования"
@@ -145,6 +150,7 @@ export const FilterPanel = ({
           value={tempFilters.status || []}
           onChange={(v) => setTempFilters({ ...tempFilters, status: v })}
         />
+
         <Group justify="flex-end" mt="md">
           <Button variant="outline" onClick={() => setTempFilters({})}>
             Сбросить фильтры
