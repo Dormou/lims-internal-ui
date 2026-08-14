@@ -17,31 +17,53 @@ export const { useGetApplicationsStatsQuery, useGetAllApplicationsQuery } =
   applicationsApi
 
 /**
- * Скачивает файл по URL через браузер
+ * Скачивает файл через blob
  */
-const downloadByUrl = (url: string, fileName: string) => {
-  fetch(url, { method: 'GET' })
-    .then((response) => response.blob())
-    .then((blob) => {
-      const downloadUrl = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = downloadUrl
-      link.download = fileName
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(downloadUrl)
-    })
+const downloadByUrl = async (url: string, fileName: string) => {
+  const response = await fetch(url, { method: 'GET' })
+  const blob = await response.blob()
+  
+  const downloadUrl = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = downloadUrl
+  link.download = fileName
+  document.body.appendChild(link)
+  link.click()
+  
+  setTimeout(() => {
+    document.body.removeChild(link)
+    URL.revokeObjectURL(downloadUrl)
+  }, 100)
 }
 
+/**
+ * Открывает файл в новой вкладке для просмотра
+ */
+const previewByUrl = async (url: string) => {
+  const response = await fetch(url, { method: 'GET' })
+  const blob = await response.blob()
+  
+  const previewUrl = URL.createObjectURL(blob)
+  window.open(previewUrl, '_blank', 'noopener,noreferrer')
+  
+  setTimeout(() => URL.revokeObjectURL(previewUrl), 1000)
+}
+
+/** Скачать сформированную заявку */
 export const downloadRawFile = (applicationId: string, fileName: string) =>
   downloadByUrl(APPLICATIONS_ENDPOINTS.rawFile(applicationId), fileName)
 
+/** Скачать подписанную заявку */
 export const downloadSignedFile = (applicationId: string, fileName: string) =>
   downloadByUrl(APPLICATIONS_ENDPOINTS.signedFile(applicationId), fileName)
 
+/** Скачать архив документов */
 export const downloadDocumentsArchive = (applicationId: string) =>
   downloadByUrl(
     APPLICATIONS_ENDPOINTS.documentsArchive(applicationId),
     `archive-${applicationId}.zip`
   )
+
+/** Открыть подписанный PDF для просмотра */
+export const previewSignedFile = (applicationId: string) =>
+  previewByUrl(APPLICATIONS_ENDPOINTS.signedFile(applicationId))

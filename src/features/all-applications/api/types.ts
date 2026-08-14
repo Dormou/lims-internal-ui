@@ -1,17 +1,13 @@
-/** Получение статистики по всем приложениям */
+/** Статистика по заявкам */
 export interface StatsResponse {
-  id: string
+  name: string
   title: string
-  value: number
+  currentMonthValue: number
+  lastMonthValue: number
   unit: string
-  lastMonthValue?: number
-  badge?: {
-    text: string
-    type: 'neutral' | 'positive' | 'negative'
-  }
 }
 
-/** Ответ — массив статистических данных по всем приложениям */
+/** Ответ — массив статистических данных */
 export type StatsResponseData = StatsResponse[]
 
 /** Документ заявки */

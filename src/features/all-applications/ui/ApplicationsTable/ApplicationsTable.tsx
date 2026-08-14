@@ -2,14 +2,18 @@ import { ScrollArea, Table, Text, Stack } from '@mantine/core'
 import type { Application } from '../../api/types'
 import { formatDate } from '@/shared/lib/formatDate'
 import { FileCard } from '@/shared/ui/file-card/FileCard'
-import { downloadRawFile, downloadSignedFile, downloadDocumentsArchive } from '../../api/AllApplicationsApi'
+import {
+  downloadRawFile,
+  downloadSignedFile,
+  downloadDocumentsArchive,
+  previewSignedFile,
+} from '../../api/AllApplicationsApi'
 
 interface ApplicationsTableProps {
   applications: Application[]
 }
 
 export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
-
   return (
     <ScrollArea mt="xl">
       <Table variant="simple" withColumnBorders withTableBorder>
@@ -82,9 +86,13 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
                       fileSize={Number(app.document.fileSize)}
                       fileType={app.document.fileExtension}
                       showMeta
-                      onPreview={() =>
-                        console.log('Открыть', app.document?.fileName)
-                      }
+                      onPreview={() => {
+                        if (app.status === 'Черновик') {
+                          console.log('Просмотр черновика')
+                        } else if (app.status === 'Отправлена') {
+                          previewSignedFile(app.applicationId)
+                        }
+                      }}
                       onDownload={
                         app.status === 'Сформирована'
                           ? () =>

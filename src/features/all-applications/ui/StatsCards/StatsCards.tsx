@@ -1,21 +1,19 @@
-// features/allApplications/ui/StatsCards/StatsCards.tsx
-import { Group } from '@mantine/core'
-import { mockStats } from '../../model/mockData'
 import { StatsCard } from '../StatsCard/StatsCard'
+import { useGetApplicationsStatsQuery } from '../../api/AllApplicationsApi'
 
 export const StatsCards = () => {
+  const { data: stats } = useGetApplicationsStatsQuery()
+
+  const totalApplications = stats?.[0]
+
+  if (!totalApplications) return null
+
   return (
-    <Group grow>
-      {mockStats.map((stat) => (
-        <StatsCard
-          key={stat.id}
-          title={stat.title}
-          value={'currentMonthValue' in stat ? stat.currentMonthValue : stat.value}
-          unit={stat.unit}
-          lastMonthValue={'lastMonthValue' in stat ? stat.lastMonthValue : undefined}
-          badge={'badge' in stat ? stat.badge : undefined}
-        />
-      ))}
-    </Group>
+    <StatsCard
+      title={totalApplications.title}
+      value={totalApplications.currentMonthValue}
+      unit={totalApplications.unit}
+      lastMonthValue={totalApplications.lastMonthValue}
+    />
   )
 }
