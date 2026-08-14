@@ -1,4 +1,4 @@
-import { Box, Stack, Title, Group, Button } from '@mantine/core'
+import { Box, Stack, Title, Group, Button, Center, Loader, Text } from '@mantine/core'
 import { Icon } from '@iconify/react'
 import { StatsCards } from '@/features/all-applications/ui/StatsCards/StatsCards'
 import { ApplicationsTable } from '@/features/all-applications/ui/ApplicationsTable/ApplicationsTable'
@@ -6,9 +6,11 @@ import { SearchBar } from '@/features/all-applications/ui/SearchBar/SearchBar'
 import { FilterPanel } from '@/features/all-applications/ui/FilterPanel/FilterPanel'
 import { FilterChips } from '@/features/all-applications/ui/FilterChips/FilterChips'
 import { useFilters } from '@/features/all-applications/hooks/useFilters'
-import { mockApplications } from '@/features/all-applications/model/mockData'
+import { useGetAllApplicationsQuery } from '@/features/all-applications/api/AllApplicationsApi'
 
 export const AllApplicationsPage = () => {
+  const { data: applications = [], isLoading, error } = useGetAllApplicationsQuery()
+
   const {
     search,
     setSearch,
@@ -18,7 +20,23 @@ export const AllApplicationsPage = () => {
     setOpened,
     filtered,
     removeFilter,
-  } = useFilters(mockApplications)
+  } = useFilters(applications)
+
+  if (isLoading) {
+    return (
+      <Center h="100vh">
+        <Loader size="xl" />
+      </Center>
+    )
+  }
+
+  if (error) {
+    return (
+      <Center h="100vh">
+        <Text c="errorRed">Ошибка загрузки данных</Text>
+      </Center>
+    )
+  }
 
   return (
     <Box p="xl">
@@ -59,3 +77,4 @@ export const AllApplicationsPage = () => {
     </Box>
   )
 }
+

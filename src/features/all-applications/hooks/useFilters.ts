@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react'
-import type { Application } from '../model/mockData'
+import type { Application } from '../api/types'
 
 export interface Filters {
-  customer?: string[]
-  manufacturer?: string[]
+  applicant?: string[]
+  producer?: string[]
   equipmentType?: string[]
   testTypes?: string[]
   status?: string[]
@@ -14,8 +14,8 @@ export interface Filters {
 }
 
 export const filterLabels: Record<keyof Filters, string> = {
-  customer: 'Заказчик',
-  manufacturer: 'Изготовитель',
+  applicant: 'Заказчик',
+  producer: 'Изготовитель',
   equipmentType: 'Тип оборудования',
   testTypes: 'Вид испытаний',
   status: 'Статус',
@@ -38,27 +38,26 @@ export const useFilters = (applications: Application[]) => {
       const lower = search.toLowerCase()
       result = result.filter(
         (app) =>
-          app.customer.toLowerCase().includes(lower) ||
-          app.manufacturer.toLowerCase().includes(lower) ||
-          app.contactPerson.toLowerCase().includes(lower) ||
-          app.contactEmail.toLowerCase().includes(lower) ||
-          app.equipmentType.toLowerCase().includes(lower) ||
-          app.testTypes.some((t) => t.toLowerCase().includes(lower))
+          app.applicant.toLowerCase().includes(lower) ||
+          (app.producer || '').toLowerCase().includes(lower) ||
+          (app.techContact || '').toLowerCase().includes(lower) ||
+          (app.equipmentType || '').toLowerCase().includes(lower) ||
+          app.tests.some((t) => t.toLowerCase().includes(lower))
       )
     }
 
     // Фильтры
-    if (filters.customer?.length) {
-      result = result.filter((app) => filters.customer!.includes(app.customer))
+    if (filters.applicant?.length) {
+      result = result.filter((app) => filters.applicant!.includes(app.applicant))
     }
-    if (filters.manufacturer?.length) {
-      result = result.filter((app) => filters.manufacturer!.includes(app.manufacturer))
+    if (filters.producer?.length) {
+      result = result.filter((app) => app.producer && filters.producer!.includes(app.producer))
     }
     if (filters.equipmentType?.length) {
-      result = result.filter((app) => filters.equipmentType!.includes(app.equipmentType))
+      result = result.filter((app) => app.equipmentType && filters.equipmentType!.includes(app.equipmentType))
     }
     if (filters.testTypes?.length) {
-      result = result.filter((app) => app.testTypes.some((t) => filters.testTypes!.includes(t)))
+      result = result.filter((app) => app.tests.some((t) => filters.testTypes!.includes(t)))
     }
     if (filters.status?.length) {
       result = result.filter((app) => filters.status!.includes(app.status))

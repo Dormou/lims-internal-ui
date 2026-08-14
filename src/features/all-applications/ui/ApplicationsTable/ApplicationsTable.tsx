@@ -1,6 +1,6 @@
-// features/allApplications/ui/ApplicationsTable/ApplicationsTable.tsx
+// features/all-applications/ui/ApplicationsTable/ApplicationsTable.tsx
 import { ScrollArea, Table, Text, Stack } from '@mantine/core'
-import { type Application } from '../../model/mockData'
+import type { Application } from '../../api/types'
 import { formatDate } from '@/shared/lib/formatDate'
 import { FileCard } from '@/shared/ui/file-card/FileCard'
 
@@ -27,7 +27,7 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
         </Table.Thead>
         <Table.Tbody>
           {applications.map((app) => (
-            <Table.Tr key={app.id}>
+            <Table.Tr key={app.applicationId}>
               <Table.Td>
                 <Text size="sm" c="black">
                   {formatDate(app.createdAt)}
@@ -40,30 +40,27 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
               </Table.Td>
               <Table.Td>
                 <Text size="sm" c="black">
-                  {app.customer}
+                  {app.applicant}
                 </Text>
               </Table.Td>
               <Table.Td>
                 <Text size="sm" c="black">
-                  {app.manufacturer}
+                  {app.producer || '—'}
                 </Text>
               </Table.Td>
               <Table.Td>
                 <Text size="sm" c="black">
-                  {app.contactPerson}
-                </Text>
-                <Text size="xs" c="black">
-                  {app.contactEmail}
+                  {app.techContact || '—'}
                 </Text>
               </Table.Td>
               <Table.Td>
                 <Text size="sm" c="black">
-                  {app.equipmentType}
+                  {app.equipmentType || '—'}
                 </Text>
               </Table.Td>
               <Table.Td>
                 <Stack gap={2}>
-                  {app.testTypes.map((test, idx) => (
+                  {app.tests.map((test, idx) => (
                     <Text key={idx} size="sm" c="black">
                       {test}
                     </Text>
@@ -76,27 +73,25 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
                 </Text>
               </Table.Td>
               <Table.Td>
-                <Stack gap={8}>
-                  {app.documents.map((doc) => (
-                    <FileCard
-                      key={doc.id}
-                      fileName={doc.fileName}
-                      fileSize={doc.fileSize}
-                      fileType={doc.fileType}
-                      showMeta={doc.type !== 'draft'}
-                      onPreview={
-                        doc.type === 'draft' || doc.type === 'signed'
-                          ? () => console.log('Открыть', doc.fileName)
-                          : undefined
-                      }
-                      onDownload={
-                        doc.type !== 'draft'
-                          ? () => console.log('Скачать', doc.fileName)
-                          : undefined
-                      }
-                    />
-                  ))}
-                </Stack>
+                {app.document ? (
+                  <FileCard
+                    key={app.document.documentId}
+                    fileName={app.document.fileName}
+                    fileSize={Number(app.document.fileSize)}
+                    fileType={app.document.fileExtension}
+                    showMeta
+                    onPreview={() =>
+                      console.log('Открыть', app.document?.fileName)
+                    }
+                    onDownload={() =>
+                      console.log('Скачать', app.document?.fileName)
+                    }
+                  />
+                ) : (
+                  <Text size="sm" c="dimmed">
+                    —
+                  </Text>
+                )}
               </Table.Td>
             </Table.Tr>
           ))}
