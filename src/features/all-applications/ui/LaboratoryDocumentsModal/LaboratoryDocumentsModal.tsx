@@ -7,11 +7,17 @@ import {
   Text,
   TextInput,
 } from '@mantine/core'
-import type { Application } from '../../api/types'
+import type { Application, ApplicationDocument } from '../../api/types'
 import { formatDate } from '@/shared/lib'
 import { FileCard } from '@/shared/ui'
 import { useState } from 'react'
 import { FileUploader } from '@/shared/ui/file-uploader/FileUploader'
+import {
+  downloadAnyFile,
+  previewAnyFile,
+  useAddLabDocumentMutation,
+  useDeleteLabDocumentMutation,
+} from '../../api/AllApplicationsApi'
 
 export const LaboratoryDocumentsModal = ({
   opened,
@@ -22,20 +28,40 @@ export const LaboratoryDocumentsModal = ({
   onClose: () => void
   application: Application | null
 }) => {
-  const downloadDocument = (documentId: string) => {
-    console.log('Скачивание документа')
-  }
-
-  const handlePreview = (documentId: string) => {
-    console.log('Просмотр документа')
-  }
-
-  const handleDelete = (documentId: string) => {
-    console.log('Удаление документа')
-  }
-
   const [comment, setComment] = useState('')
   const [documentFile, setDocumentFile] = useState<File | null>(null)
+
+  const [addLabDocument, { isLoading: isAddLoading }] =
+    useAddLabDocumentMutation()
+  const [deleteLabDocument, { isLoading: isDeleteLoading }] =
+    useDeleteLabDocumentMutation()
+
+  const downloadDocument = (document: ApplicationDocument) => {
+    downloadAnyFile(
+      application!.orderId,
+      document.documentId,
+      document.fileName
+    )
+  }
+
+  const handlePreview = (document: ApplicationDocument) => {
+    previewAnyFile(application!.orderId, document.documentId)
+  }
+
+  const handleDelete = async (document: ApplicationDocument) => {
+    await deleteLabDocument({
+      orderId: application!.orderId,
+      documentId: document.documentId,
+    })
+  }
+
+  const handleSubmit = async () => {
+    if (!documentFile) return
+    await addLabDocument({
+      documentFile: documentFile,
+      orderId: application!.orderId,
+    })
+  }
 
   if (!application) return null
 
@@ -101,9 +127,9 @@ export const LaboratoryDocumentsModal = ({
                       parseInt(doc.document.fileSize.split(' ')[0]) * 1024
                     }
                     fileType={doc.document.fileExtension}
-                    onDownload={() => downloadDocument(doc.document.documentId)}
-                    onPreview={() => handlePreview(doc.document.documentId)}
-                    onDelete={() => handleDelete(doc.document.documentId)}
+                    onDownload={() => downloadDocument(doc.document)}
+                    onPreview={() => handlePreview(doc.document)}
+                    onDelete={() => handleDelete(doc.document)}
                   />
                 </Table.Td>
               </Table.Tr>
@@ -146,6 +172,8 @@ export const LaboratoryDocumentsModal = ({
           variant="filled"
           size="lg"
           disabled={comment.trim() === '' || !documentFile}
+          loading={isAddLoading || isDeleteLoading}
+          onClick={handleSubmit}
         >
           Направить документ
         </Button>

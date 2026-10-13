@@ -13,7 +13,7 @@ export type StatsResponseData = StatsResponse[]
 /** Документ заявки */
 export interface ApplicationDocument {
   documentId: string
-  applicationId: string
+  orderId: string
   fileName: string
   fileExtension: string
   fileSize: string
@@ -28,7 +28,7 @@ export interface TestItem {
 
 /** Заявка */
 export interface Application {
-  applicationId: string
+  orderId: string
   createdAt: string
   updatedAt: string
   applicant: string
@@ -37,7 +37,8 @@ export interface Application {
   equipmentType: string | null
   tests: TestItem[]
   status: string
-  document: ApplicationDocument | null
+  rawDocument: ApplicationDocument | null
+  signedDocument: ApplicationDocument | null
   laboratoryDocuments: [
     {
       comment: string
@@ -69,4 +70,14 @@ export interface ApplicationDraftResponse {
   draft: ApplicationDraft | null
   regulatoryDocument: ApplicationDocument | null
   additionalDocuments: ApplicationDocument[]
+}
+
+export type AddLabDocumentRequest = {
+  documentFile: File
+  orderId: string
+}
+
+export type DeleteLabDocumentRequest = {
+  orderId: string
+  documentId: string
 }

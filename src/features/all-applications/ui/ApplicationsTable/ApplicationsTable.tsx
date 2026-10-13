@@ -4,10 +4,9 @@ import type { Application, ApplicationDraftResponse } from '../../api/types'
 import { formatDate } from '@/shared/lib/formatDate'
 import { FileCard } from '@/shared/ui/file-card/FileCard'
 import {
-  downloadRawFile,
-  downloadSignedFile,
+  downloadAnyFile,
   downloadDocumentsArchive,
-  previewSignedFile,
+  previewAnyFile,
   previewRawFile,
   useLazyGetApplicationDraftQuery,
 } from '../../api/AllApplicationsApi'
@@ -58,10 +57,11 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
           </Table.Thead>
           <Table.Tbody>
             {applications.map((app) => {
-              const isPdf = app.document?.fileExtension.toLowerCase() === '.pdf'
+              const isPdf =
+                app.rawDocument?.fileExtension.toLowerCase() === '.pdf'
 
               return (
-                <Table.Tr key={app.applicationId}>
+                <Table.Tr key={app.orderId}>
                   <Table.Td>
                     <Text size="sm" c="black">
                       {formatDate(app.createdAt)}
@@ -113,35 +113,45 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
                         fileSize={0}
                         fileType="draft"
                         showMeta={false}
-                        onPreview={() => handlePreviewDraft(app.applicationId)}
+                        onPreview={() => handlePreviewDraft(app.orderId)}
                       />
-                    ) : app.document ? (
+                    ) : app.rawDocument ? (
                       <Stack gap={8}>
                         <FileCard
-                          key={app.document.documentId}
-                          fileName={app.document.fileName}
-                          fileSize={Number(app.document.fileSize)}
-                          fileType={app.document.fileExtension}
+                          key={app.rawDocument.documentId}
+                          fileName={app.rawDocument.fileName}
+                          fileSize={Number(app.rawDocument.fileSize)}
+                          fileType={app.rawDocument.fileExtension}
                           showMeta
                           onPreview={
                             isPdf
                               ? app.status === 'Отправлена'
-                                ? () => previewSignedFile(app.applicationId)
-                                : () => previewRawFile(app.applicationId)
+                                ? () =>
+                                    previewAnyFile(
+                                      app.orderId,
+                                      app.signedDocument!.documentId
+                                    )
+                                : () =>
+                                    previewRawFile(
+                                      app.orderId,
+                                      app.rawDocument!.documentId
+                                    )
                               : undefined
                           }
                           onDownload={
                             app.status === 'Сформирована'
                               ? () =>
-                                  downloadRawFile(
-                                    app.applicationId,
-                                    app.document!.fileName
+                                  downloadAnyFile(
+                                    app.orderId,
+                                    app.rawDocument!.documentId,
+                                    app.rawDocument!.fileName
                                   )
                               : app.status === 'Отправлена'
                                 ? () =>
-                                    downloadSignedFile(
-                                      app.applicationId,
-                                      app.document!.fileName
+                                    downloadAnyFile(
+                                      app.orderId,
+                                      app.rawDocument!.documentId,
+                                      app.rawDocument!.fileName
                                     )
                                 : undefined
                           }
@@ -154,7 +164,7 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
                             fileType="zip"
                             showMeta={false}
                             onDownload={() =>
-                              downloadDocumentsArchive(app.applicationId)
+                              downloadDocumentsArchive(app.orderId)
                             }
                           />
                         )}

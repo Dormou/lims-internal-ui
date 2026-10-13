@@ -12,7 +12,7 @@ export const mockStats: StatsResponse[] = [
 
 export const mockApplications: Application[] = [
   {
-    applicationId: '1',
+    orderId: '1',
     createdAt: '2026-01-15T10:30:00',
     updatedAt: '2026-01-20T14:00:00',
     applicant: 'Заказчик 1',
@@ -21,13 +21,14 @@ export const mockApplications: Application[] = [
     equipmentType: 'Силовые трансформаторы',
     tests: [],
     status: 'Отправлена',
-    document: null,
+    rawDocument: null,
+    signedDocument: null,
     laboratoryDocuments: [
       {
         comment: 'Комментарий к исходному документу',
         document: {
           documentId: 'doc1',
-          applicationId: '1',
+          orderId: '1',
           fileName: 'Ответ на заявку от Наименование организации Дата',
           fileExtension: '.pdf',
           fileSize: '3.2 KB',

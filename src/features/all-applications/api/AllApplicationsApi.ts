@@ -1,7 +1,10 @@
 import { rootApi } from '@/shared/api'
 import { APPLICATIONS_ENDPOINTS } from './endpoints'
 import type {
+  AddLabDocumentRequest,
+  ApplicationDocument,
   ApplicationDraftResponse,
+  DeleteLabDocumentRequest,
   GetAllApplicationsResponse,
   StatsResponseData,
 } from './types'
@@ -13,9 +16,38 @@ const applicationsApi = rootApi.injectEndpoints({
     }),
     getAllApplications: builder.query<GetAllApplicationsResponse, void>({
       query: () => APPLICATIONS_ENDPOINTS.getAll,
+      providesTags: ['Applications'],
     }),
     getApplicationDraft: builder.query<ApplicationDraftResponse, string>({
       query: (applicationId) => APPLICATIONS_ENDPOINTS.draft(applicationId),
+    }),
+    addLabDocument: builder.mutation<
+      ApplicationDocument,
+      AddLabDocumentRequest
+    >({
+      query: (data) => {
+        const formData = new FormData()
+        formData.append('file', data.documentFile)
+
+        return {
+          url: APPLICATIONS_ENDPOINTS.addLabDocument(data.orderId),
+          method: 'POST',
+          body: formData,
+        }
+      },
+      invalidatesTags: ['Applications'],
+    }),
+    deleteLabDocument: builder.mutation<void, DeleteLabDocumentRequest>({
+      query: (data) => {
+        return {
+          url: APPLICATIONS_ENDPOINTS.deleteLabDocument(
+            data.orderId,
+            data.documentId
+          ),
+          method: 'DELETE',
+        }
+      },
+      invalidatesTags: ['Applications'],
     }),
   }),
 })
@@ -24,6 +56,8 @@ export const {
   useGetApplicationsStatsQuery,
   useGetAllApplicationsQuery,
   useLazyGetApplicationDraftQuery,
+  useAddLabDocumentMutation,
+  useDeleteLabDocumentMutation,
 } = applicationsApi
 
 /**
@@ -59,29 +93,28 @@ const previewByUrl = async (url: string) => {
   setTimeout(() => URL.revokeObjectURL(previewUrl), 1000)
 }
 
-/** Скачать сформированную заявку */
-export const downloadRawFile = (applicationId: string, fileName: string) =>
-  downloadByUrl(APPLICATIONS_ENDPOINTS.rawFile(applicationId), fileName)
-
-/** Скачать подписанную заявку */
-export const downloadSignedFile = (applicationId: string, fileName: string) =>
-  downloadByUrl(APPLICATIONS_ENDPOINTS.signedFile(applicationId), fileName)
+export const downloadAnyFile = (
+  orderId: string,
+  documentId: string,
+  fileName: string
+) =>
+  downloadByUrl(APPLICATIONS_ENDPOINTS.documents(orderId, documentId), fileName)
 
 /** Скачать архив документов */
-export const downloadDocumentsArchive = (applicationId: string) =>
+export const downloadDocumentsArchive = (orderId: string) =>
   downloadByUrl(
-    APPLICATIONS_ENDPOINTS.documentsArchive(applicationId),
-    `archive-${applicationId}.zip`
+    APPLICATIONS_ENDPOINTS.documentsArchive(orderId),
+    `archive-${orderId}.zip`
   )
 
-/** Открыть подписанный PDF для просмотра */
-export const previewSignedFile = (applicationId: string) =>
-  previewByUrl(APPLICATIONS_ENDPOINTS.signedFile(applicationId))
+/** Открыть PDF для просмотра */
+export const previewAnyFile = (orderId: string, documentId: string) =>
+  previewByUrl(APPLICATIONS_ENDPOINTS.documents(orderId, documentId))
 
 /** Открыть сформированную заявку для просмотра */
-export const previewRawFile = (applicationId: string) => {
+export const previewRawFile = (orderId: string, documentId: string) => {
   window.open(
-    APPLICATIONS_ENDPOINTS.rawFile(applicationId),
+    APPLICATIONS_ENDPOINTS.documents(orderId, documentId),
     '_blank',
     'noopener,noreferrer'
   )
