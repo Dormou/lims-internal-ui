@@ -5,17 +5,13 @@ import { useLoginMutation } from '@/entities/auth'
 
 interface LoginFormProps {
   recoverPasswordButton: React.ReactNode | null
-  registerButton: React.ReactNode | null
 }
 
-export const LoginForm = ({
-  recoverPasswordButton,
-  registerButton,
-}: LoginFormProps) => {
+export const LoginForm = ({ recoverPasswordButton }: LoginFormProps) => {
   const [login] = useLoginMutation()
 
   const form = useForm({
-    initialValues: { email: '', password: '', userType: 'Client' },
+    initialValues: { email: '', password: '' },
   })
 
   const handleSubmit = async (values: typeof form.values) => {
@@ -52,8 +48,6 @@ export const LoginForm = ({
         <Button variant="filled" type="submit" size="lg" mt={16}>
           Войти
         </Button>
-
-        {registerButton}
       </Stack>
     </form>
   )

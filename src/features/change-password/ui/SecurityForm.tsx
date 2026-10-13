@@ -27,7 +27,7 @@ export const SecurityForm = () => {
   // Управление видимостью модального окна
   const [opened, { open, close }] = useDisclosure(false)
 
-  const lastUpdate = data?.passwordChangeDate
+  const lastUpdate = data?.passwordMetadata.passwordSettingDate
   const monthsAgo = lastUpdate ? dayjs().diff(lastUpdate, 'month') : 0
   const timeAgoText =
     monthsAgo < 1
@@ -99,11 +99,7 @@ export const SecurityForm = () => {
             </Text>
           )}
         </Stack>
-        <Button
-          variant="outline"
-          size="md"
-          onClick={open}
-        >
+        <Button variant="outline" size="md" onClick={open}>
           Изменить пароль
         </Button>
       </Group>
@@ -118,25 +114,24 @@ export const SecurityForm = () => {
       >
         <form onSubmit={passwordForm.onSubmit(handleSavePassword)}>
           <Stack gap="lg">
-            <Title size="xl" fw={500} ta='center'>
+            <Title size="xl" fw={500} ta="center">
               Изменение пароля
             </Title>
 
             <PasswordInput
-              label='Текущий пароль'
+              label="Текущий пароль"
               placeholder="Введите текущий пароль"
               {...passwordForm.getInputProps('oldPassword')}
             />
 
-
             <PasswordInput
-              label='Новый пароль'
+              label="Новый пароль"
               placeholder="Введите новый пароль"
               {...passwordForm.getInputProps('newPassword')}
             />
 
             <PasswordInput
-              label='Подтверждение пароля'
+              label="Подтверждение пароля"
               placeholder="Повторите новый пароль"
               {...passwordForm.getInputProps('confirmPassword')}
             />

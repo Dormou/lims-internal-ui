@@ -7,15 +7,11 @@ import type {
   ChangePasswordRequest,
   SetupPasswordRequest,
 } from './types/requests'
-import type {
-  LoginResponse,
-  ChangePasswordResponse,
-  SetupPasswordResponse,
-} from './types/responses'
+import type { AuthResponse } from './types/responses'
 
 const extendedApi = rootApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<AuthResponse, LoginRequest>({
       query: (data) => ({
         url: AUTH_ENDPOINTS.login,
         method: 'POST',
@@ -49,10 +45,7 @@ const extendedApi = rootApi.injectEndpoints({
         body: data,
       }),
     }),
-    changePassword: builder.mutation<
-      ChangePasswordResponse,
-      ChangePasswordRequest
-    >({
+    changePassword: builder.mutation<AuthResponse, ChangePasswordRequest>({
       query: (data) => ({
         url: AUTH_ENDPOINTS.changePassword,
         method: 'POST',
@@ -60,10 +53,7 @@ const extendedApi = rootApi.injectEndpoints({
       }),
       invalidatesTags: ['Profile'],
     }),
-    setupPassword: builder.mutation<
-      SetupPasswordResponse,
-      SetupPasswordRequest
-    >({
+    setupPassword: builder.mutation<AuthResponse, SetupPasswordRequest>({
       query: (data) => ({
         url: AUTH_ENDPOINTS.setupPassword,
         method: 'POST',

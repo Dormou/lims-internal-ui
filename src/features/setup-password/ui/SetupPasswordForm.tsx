@@ -33,7 +33,7 @@ export const SetupPasswordForm = () => {
 
       dispatch(login(data))
 
-      navigate(RoutesPath.Home)
+      navigate(RoutesPath.AllApplications)
     } catch (e) {
       console.error('Ошибка установки пароля')
     }

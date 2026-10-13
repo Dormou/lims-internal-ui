@@ -1,31 +1,45 @@
 export type UserProfile = {
+  id: string
   fullName: {
     firstName: string
     lastName: string
     patronymic: string | null
   }
   registrationDate: string
-  passwordChangeDate: string
   email: string
   phoneNumber: string | null
+
+  organization: {
+    fullName: string
+    shortName: string | null
+    legalAddress: string | null
+    postalAddress: string | null
+    innKpp: string
+    ogrn: string | null
+    email: string | null
+    phoneNumber: string | null
+  }
+
+  headPerson: {
+    firstName: string
+    lastName: string
+    patronymic: string | null
+    position: string
+    document: string | null
+  } | null
+
+  techContacts: TechContact[]
   iAmTechContact: boolean
-  iAmHead: boolean
-  organizationFullName: string
-  organizationShortName: string | null
-  organizationLegalAddress: string | null
-  organizationPostalAddress: string | null
-  innKpp: string
-  ogrn: string | null
-  organizationEmail: string | null
-  organizationPhoneNumber: string | null
-  headFirstName: string
-  headLastName: string
-  headPatronymic: string | null
-  headPosition: string | null
-  headDocument: string | null
-  techContactFirstName: string | null
-  techContactLastName: string | null
-  techContactPatronymic: string | null
-  techContactEmail: string | null
-  techContactPhoneNumber: string | null
+}
+
+export type TechContact = {
+  techContactId: string
+  fullName: {
+    firstName: string
+    lastName: string
+    patronymic: string | null
+  }
+  email: string
+  phoneNumber: string
+  isAccountOwner: boolean
 }

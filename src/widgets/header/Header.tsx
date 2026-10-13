@@ -24,11 +24,11 @@ export const Header = () => {
   const displayName = useMemo(() => {
     if (!userInfo) return 'Гость'
 
-    const { firstName, lastName, patronymic } = userInfo.fullName
+    const { given_name, family_name, patronymic } = userInfo
     const initials =
-      `${firstName[0]}.` + (patronymic ? `${patronymic[0]}.` : '')
+      `${given_name[0]}.` + (patronymic ? `${patronymic[0]}.` : '')
 
-    return `${lastName} ${initials}`
+    return `${family_name} ${initials}`
   }, [userInfo])
 
   return (
@@ -42,7 +42,7 @@ export const Header = () => {
       pos="relative"
       className={styles.header}
     >
-      <UnstyledButton onClick={() => navigate(RoutesPath.Home)}>
+      <UnstyledButton onClick={() => navigate(RoutesPath.AllApplications)}>
         <Image
           src="./logo.png"
           alt="Россети"
@@ -60,7 +60,7 @@ export const Header = () => {
         ta="left"
         size="xxl"
         className={styles.headerTitle}
-        onClick={() => navigate(RoutesPath.Home)}
+        onClick={() => navigate(RoutesPath.AllApplications)}
       >
         АИС Управление испытаниями
       </Anchor>

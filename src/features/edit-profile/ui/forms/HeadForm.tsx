@@ -10,11 +10,11 @@ export const HeadForm = ({ profile }: { profile: UserProfile | undefined }) => {
 
   const headForm = useForm({
     initialValues: {
-      firstName: profile?.headFirstName || '',
-      lastName: profile?.headLastName || '',
-      patronymic: profile?.headPatronymic || '',
-      headPosition: profile?.headPosition || '',
-      headDocument: profile?.headDocument || '',
+      firstName: profile?.headPerson?.firstName || '',
+      lastName: profile?.headPerson?.lastName || '',
+      patronymic: profile?.headPerson?.patronymic || '',
+      headPosition: profile?.headPerson?.position || '',
+      headDocument: profile?.headPerson?.document || '',
     },
   })
 

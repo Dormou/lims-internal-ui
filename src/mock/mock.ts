@@ -14,6 +14,9 @@ import {
   updateTechContactHandler,
   updateUserHandler,
 } from '@/entities/user'
+import { getAllApplicationsHandler } from '@/features/all-applications/api/mock/getAllApplications'
+import { getApplicationsStatsHandler } from '@/features/all-applications/api/mock/getApplicationsStats'
+import { getApplicationDraftHandler } from '@/features/all-applications/api/mock/getApplicationDraft'
 
 export const worker = setupWorker(
   ...[
@@ -28,5 +31,8 @@ export const worker = setupWorker(
     updateOrganizationHandler,
     updateTechContactHandler,
     updateUserHandler,
+    getAllApplicationsHandler,
+    getApplicationsStatsHandler,
+    getApplicationDraftHandler,
   ]
 )

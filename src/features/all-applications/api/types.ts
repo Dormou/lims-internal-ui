@@ -38,6 +38,12 @@ export interface Application {
   tests: TestItem[]
   status: string
   document: ApplicationDocument | null
+  laboratoryDocuments: [
+    {
+      comment: string
+      document: ApplicationDocument
+    },
+  ]
 }
 
 /** Ответ - массив на получение данных всех заявок */
@@ -50,7 +56,9 @@ export interface ApplicationDraft {
   producerName: string | null
   producerAddress: string | null
   techDocumentName: string | null
-  samples: Array<string | { name: string; parameterValues: unknown[]; testValues: unknown[] }>
+  samples: Array<
+    string | { name: string; parameterValues: unknown[]; testValues: unknown[] }
+  >
 }
 
 /** Полный черновик заявки */

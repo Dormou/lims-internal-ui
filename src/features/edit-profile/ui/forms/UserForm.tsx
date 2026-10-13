@@ -16,8 +16,9 @@ export const UserForm = () => {
 
       dispatch(
         setFullName({
-          firstName: userForm.values.firstName,
-          lastName: userForm.values.lastName,
+          user_type: 'test',
+          given_name: userForm.values.firstName,
+          family_name: userForm.values.lastName,
           patronymic: userForm.values.patronymic,
         })
       )

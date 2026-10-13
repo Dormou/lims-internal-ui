@@ -8,7 +8,7 @@ const realBaseQuery = createBaseQueryWithReauth({
     import.meta.env.VITE_ENABLE_MOCK === 'true'
       ? `http://localhost:${import.meta.env.VITE_SERVER_PORT}`
       : '/api',
-  refreshUrl: '/auth/refresh',
+  refreshUrl: '/v1/auth/refresh',
   getToken: (state: RootState) => state.auth.accessToken,
   getRefreshToken: (state: RootState) => state.auth.refreshToken,
   onRefreshSuccess: (data) => authSlice.actions.setAuth(data),

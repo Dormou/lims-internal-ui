@@ -6,6 +6,7 @@ import type {
   UpdateOrganizationRequest,
   UpdateHeadRequest,
   UpdateTechContactRequest,
+  AddTechContactRequest,
 } from './types/requests'
 import type { GetProfileResponse } from './types/responses'
 
@@ -54,6 +55,14 @@ const extendedApi = rootApi.injectEndpoints({
       }),
       invalidatesTags: ['Profile'],
     }),
+    addTechContact: builder.mutation<void, AddTechContactRequest>({
+      query: (data) => ({
+        url: USER_ENDPOINTS.addTechContact,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Profile'],
+    }),
   }),
 })
 
@@ -64,4 +73,5 @@ export const {
   useUpdateOrganizationMutation,
   useUpdateHeadMutation,
   useUpdateTechContactMutation,
+  useAddTechContactMutation,
 } = extendedApi

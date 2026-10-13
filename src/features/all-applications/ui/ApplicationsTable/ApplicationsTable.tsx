@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ScrollArea, Table, Text, Stack } from '@mantine/core'
+import { ScrollArea, Table, Text, Stack, Button } from '@mantine/core'
 import type { Application, ApplicationDraftResponse } from '../../api/types'
 import { formatDate } from '@/shared/lib/formatDate'
 import { FileCard } from '@/shared/ui/file-card/FileCard'
@@ -12,6 +12,7 @@ import {
   useLazyGetApplicationDraftQuery,
 } from '../../api/AllApplicationsApi'
 import { DraftModal } from '../DraftModal/DraftModat'
+import { LaboratoryDocumentsModal } from '../LaboratoryDocumentsModal/LaboratoryDocumentsModal'
 
 interface ApplicationsTableProps {
   applications: Application[]
@@ -24,6 +25,8 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
     null
   )
   const [draftOpened, setDraftOpened] = useState(false)
+
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null)
 
   const handlePreviewDraft = async (applicationId: string) => {
     try {
@@ -50,12 +53,12 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
               <Table.Th>Виды испытаний</Table.Th>
               <Table.Th>Статус</Table.Th>
               <Table.Th>Документы по заявке</Table.Th>
+              <Table.Th>Исходящие документы</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
             {applications.map((app) => {
-              const isPdf =
-                app.document?.fileExtension.toLowerCase() === '.pdf'
+              const isPdf = app.document?.fileExtension.toLowerCase() === '.pdf'
 
               return (
                 <Table.Tr key={app.applicationId}>
@@ -162,6 +165,22 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
                       </Text>
                     )}
                   </Table.Td>
+                  <Table.Td>
+                    <Stack>
+                      <Text ta="center">
+                        Всего направлено:{' '}
+                        <Text span>{app.laboratoryDocuments.length}</Text>
+                      </Text>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        m="auto"
+                        onClick={() => setSelectedApp(app)}
+                      >
+                        Список документов
+                      </Button>
+                    </Stack>
+                  </Table.Td>
                 </Table.Tr>
               )
             })}
@@ -174,6 +193,12 @@ export const ApplicationsTable = ({ applications }: ApplicationsTableProps) => {
         onClose={() => setDraftOpened(false)}
         draft={draftData}
         isLoading={isDraftLoading}
+      />
+
+      <LaboratoryDocumentsModal
+        opened={!!selectedApp}
+        onClose={() => setSelectedApp(null)}
+        application={selectedApp}
       />
     </>
   )

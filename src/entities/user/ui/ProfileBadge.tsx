@@ -15,11 +15,13 @@ export const ProfileBadge = () => {
       </Avatar>
       <Stack gap={4}>
         <Title order={1}>
-          {`${data.fullName.lastName} ${data.fullName.firstName} ${data.fullName.patronymic || ''}`}
+          {`${data.profile.fullName.lastName} ${data.profile.fullName.firstName} ${data.profile.fullName.patronymic || ''}`}
         </Title>
         <Text c="dimmed" size="sm">
           Дата регистрации:
-          {data.registrationDate ? formatDate(data.registrationDate) : ''}
+          {data.profile.registrationDate
+            ? formatDate(data.profile.registrationDate)
+            : ''}
         </Text>
       </Stack>
     </Group>

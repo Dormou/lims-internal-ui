@@ -9,5 +9,10 @@ export const ProfilePage = () => {
   if (isFetching) return <Loader />
   if (isError) return <div>Не удалось загрузить данные</div>
 
-  return <EditProfileForm securityForm={<SecurityForm />} profileData={data} />
+  return (
+    <EditProfileForm
+      securityForm={<SecurityForm />}
+      profileData={data?.profile}
+    />
+  )
 }

@@ -12,10 +12,8 @@ export type UpdateUserRequest = {
   firstName: string
   lastName: string
   patronymic: string | null
-  email: string
   phoneNumber: string | null
   iAmTechContact: boolean
-  iAmHead: boolean
 }
 
 export type UpdateOrganizationRequest = {
@@ -37,10 +35,19 @@ export type UpdateHeadRequest = {
   headDocument: string | null
 }
 
-export type UpdateTechContactRequest = {
-  firstName: string | null
-  lastName: string | null
+export type AddTechContactRequest = {
+  firstName: string
+  lastName: string
   patronymic: string | null
-  email: string | null
+  email: string
+  phoneNumber: string | null
+}
+
+export type UpdateTechContactRequest = {
+  techContactId: string
+  firstName: string
+  lastName: string
+  patronymic: string | null
+  email: string
   phoneNumber: string | null
 }

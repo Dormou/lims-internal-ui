@@ -22,15 +22,6 @@ export const LoginPage = () => {
                 Восстановить пароль
               </Anchor>
             }
-            registerButton={
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={registrationHandlers.open}
-              >
-                Зарегистрироваться
-              </Button>
-            }
           />
         </Stack>
       </Center>

@@ -15,14 +15,14 @@ export const OrganizationForm = ({
 
   const organizationForm = useForm({
     initialValues: {
-      organizationFullName: profile?.organizationFullName || '',
-      organizationShortName: profile?.organizationShortName || '',
-      organizationLegalAddress: profile?.organizationLegalAddress || '',
-      organizationPostalAddress: profile?.organizationPostalAddress || '',
-      innKpp: profile?.innKpp || '',
-      ogrn: profile?.ogrn || '',
-      organizationEmail: profile?.organizationEmail || '',
-      organizationPhoneNumber: profile?.organizationPhoneNumber || '',
+      organizationFullName: profile?.organization?.fullName || '',
+      organizationShortName: profile?.organization?.shortName || '',
+      organizationLegalAddress: profile?.organization?.legalAddress || '',
+      organizationPostalAddress: profile?.organization?.postalAddress || '',
+      innKpp: profile?.organization?.innKpp || '',
+      ogrn: profile?.organization?.ogrn || '',
+      organizationEmail: profile?.organization?.email || '',
+      organizationPhoneNumber: profile?.organization?.phoneNumber || '',
     },
   })
 

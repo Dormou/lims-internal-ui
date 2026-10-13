@@ -1,4 +1,13 @@
-import { Box, Stack, Title, Group, Button, Center, Loader, Text } from '@mantine/core'
+import {
+  Box,
+  Stack,
+  Title,
+  Group,
+  Button,
+  Center,
+  Loader,
+  Text,
+} from '@mantine/core'
 import { Icon } from '@iconify/react'
 import { StatsCards } from '@/features/all-applications/ui/StatsCards/StatsCards'
 import { ApplicationsTable } from '@/features/all-applications/ui/ApplicationsTable/ApplicationsTable'
@@ -9,7 +18,11 @@ import { useFilters } from '@/features/all-applications/hooks/useFilters'
 import { useGetAllApplicationsQuery } from '@/features/all-applications/api/AllApplicationsApi'
 
 export const AllApplicationsPage = () => {
-  const { data: applications = [], isLoading, error } = useGetAllApplicationsQuery()
+  const {
+    data: applications = [],
+    isLoading,
+    error,
+  } = useGetAllApplicationsQuery()
 
   const {
     search,
@@ -39,7 +52,7 @@ export const AllApplicationsPage = () => {
   }
 
   return (
-    <Box p="xl">
+    <Box p="xl" w="100%">
       <Stack gap="lg">
         <Title order={2} ta="center">
           Заявки на испытания

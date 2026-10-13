@@ -1,8 +1,9 @@
 export const USER_ENDPOINTS = {
-  registerUser: '/clients',
-  getProfile: '/clients/me',
-  updateUser: '/clients/me',
-  updateOrganization: '/clients/me/organization',
-  updateHead: '/clients/me/head',
-  updateTechContact: '/clients/me/tech-contact',
+  registerUser: '/v1/registration/client',
+  getProfile: '/v1/clients/my-profile',
+  updateUser: '/v1/clients/personal-info',
+  updateOrganization: '/v1/clients/organization-info',
+  updateHead: '/v1/clients/head-info',
+  addTechContact: '/v1/clients/tech-contacts',
+  updateTechContact: '/v1/clients/tech-contacts',
 }

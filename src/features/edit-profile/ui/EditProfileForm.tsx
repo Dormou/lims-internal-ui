@@ -21,7 +21,7 @@ export const EditProfileForm = ({
       email: profileData?.email || '',
       phoneNumber: profileData?.phoneNumber || '',
       iAmTechContact: profileData?.iAmTechContact || false,
-      iAmHead: profileData?.iAmHead || false,
+      iAmHead: false,
     },
   })
 

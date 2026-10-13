@@ -1,7 +1,7 @@
 export const AUTH_ENDPOINTS = {
-  login: '/auth/login',
-  logout: '/auth/logout',
-  recoverPassword: '/auth/recover-password',
-  changePassword: '/auth/change-password',
-  setupPassword: '/auth/setup-password',
+  login: '/v1/auth/login',
+  logout: '/v1/auth/logout',
+  recoverPassword: '/v1/password/recover',
+  changePassword: '/v1/password/change',
+  setupPassword: '/v1/password/setup',
 }

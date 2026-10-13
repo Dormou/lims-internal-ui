@@ -1,8 +1,6 @@
 export type UserInfo = {
-  id: string
-  fullName: {
-    firstName: string
-    lastName: string
-    patronymic: string | null
-  }
+  user_type: string
+  given_name: string
+  family_name: string
+  patronymic: string | null
 }

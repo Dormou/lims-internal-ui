@@ -1,7 +1,6 @@
 export type LoginRequest = {
   email: string
   password: string
-  userType: string
 }
 
 export type RecoverPasswordRequest = {

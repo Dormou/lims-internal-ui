@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { jwtDecode } from 'jwt-decode'
 import type { UserInfo } from './types/userInfo'
 
 const loadUser = (): UserInfo | null => {
@@ -31,16 +32,21 @@ export const authSlice = createSlice({
       action: PayloadAction<{
         accessToken: string
         refreshToken: string
-        userInfo: UserInfo
       }>
     ) => {
-      localStorage.setItem('access_token', action.payload.accessToken)
-      localStorage.setItem('refresh_token', action.payload.refreshToken)
-      localStorage.setItem('user_info', JSON.stringify(action.payload.userInfo))
+      try {
+        const claims = jwtDecode<UserInfo>(action.payload.accessToken)
 
-      state.accessToken = action.payload.accessToken
-      state.refreshToken = action.payload.refreshToken
-      state.userInfo = action.payload.userInfo
+        localStorage.setItem('access_token', action.payload.accessToken)
+        localStorage.setItem('refresh_token', action.payload.refreshToken)
+        localStorage.setItem('user_info', JSON.stringify(claims))
+
+        state.accessToken = action.payload.accessToken
+        state.refreshToken = action.payload.refreshToken
+        state.userInfo = claims
+      } catch (error) {
+        console.error('Не удалось декодировать jwt токен', error)
+      }
     },
     logout: (state) => {
       localStorage.removeItem('access_token')
@@ -55,23 +61,24 @@ export const authSlice = createSlice({
       state,
       action: PayloadAction<{ accessToken: string; refreshToken: string }>
     ) => {
-      localStorage.setItem('access_token', action.payload.accessToken)
-      localStorage.setItem('refresh_token', action.payload.refreshToken)
+      try {
+        const claims = jwtDecode<UserInfo>(action.payload.accessToken)
 
-      state.accessToken = action.payload.accessToken
-      state.refreshToken = action.payload.refreshToken
+        localStorage.setItem('access_token', action.payload.accessToken)
+        localStorage.setItem('refresh_token', action.payload.refreshToken)
+        localStorage.setItem('user_info', JSON.stringify(claims))
+
+        state.accessToken = action.payload.accessToken
+        state.refreshToken = action.payload.refreshToken
+        state.userInfo = claims
+      } catch (error) {
+        console.error('Не удалось декодировать jwt токен', error)
+      }
     },
-    setFullName: (
-      state,
-      action: PayloadAction<{
-        firstName: string
-        lastName: string
-        patronymic: string | null
-      }>
-    ) => {
+    setFullName: (state, action: PayloadAction<UserInfo>) => {
       if (state.userInfo) {
-        state.userInfo.fullName = { ...action.payload }
-        localStorage.setItem('user_info', JSON.stringify(state.userInfo))
+        state.userInfo = action.payload
+        localStorage.setItem('user_info', JSON.stringify(action.payload))
       }
     },
   },

@@ -1,11 +1,10 @@
 export const APPLICATIONS_ENDPOINTS = {
-  stats: '/applications/stats',
-  getAll: '/applications/all',
-  rawFile: (applicationId: string) =>
-    `/api/applications/${applicationId}/raw-file`,
+  stats: '/v1/orders/stats',
+  getAll: '/v1/orders/all',
+  rawFile: (applicationId: string) => `/v1/orders/${applicationId}/raw-file`,
   signedFile: (applicationId: string) =>
-    `/api/applications/${applicationId}/signed-file`,
+    `/v1/orders/${applicationId}/signed-file`,
   documentsArchive: (applicationId: string) =>
-    `/api/applications/${applicationId}/documents-archive`,
-  draft: (applicationId: string) => `/applications/${applicationId}/draft`,
+    `/v1/orders/${applicationId}/documents-archive`,
+  draft: (applicationId: string) => `/orders/${applicationId}/draft`,
 }

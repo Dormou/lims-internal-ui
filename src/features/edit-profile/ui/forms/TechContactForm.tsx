@@ -14,17 +14,17 @@ export const TechContactForm = ({
 
   const techContactForm = useForm({
     initialValues: {
-      firstName: profile?.techContactFirstName || '',
-      lastName: profile?.techContactLastName || '',
-      patronymic: profile?.techContactPatronymic || '',
-      email: profile?.techContactEmail || '',
-      phoneNumber: profile?.techContactPhoneNumber || '',
+      firstName: '',
+      lastName: '',
+      patronymic: '',
+      email: '',
+      phoneNumber: '',
     },
   })
 
   const handleSaveTechContact = async () => {
     try {
-      await updateTechContact(techContactForm.values).unwrap()
+      //await updateTechContact(techContactForm.values).unwrap()
       techContactForm.resetDirty()
     } catch (e) {
       console.error('Ошибка обновления контакта по техническим вопросам', e)
